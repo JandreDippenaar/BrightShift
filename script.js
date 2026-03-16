@@ -338,14 +338,27 @@ function multiLerp(stops, t) {
     const lines = document.querySelectorAll('.fade-line');
     if (!lines.length) return;
 
+    function getProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        return Math.min(1, Math.max(0, scrollTop / docHeight));
+    }
+
     function update() {
+        const p = getProgress();
         lines.forEach(line => {
             const revealAt = parseFloat(line.dataset.reveal);
-            if (scrollProgress >= revealAt) {
-                line.classList.add('revealed');
+            const fadeRange = 0.03;
+            let op;
+            if (p < revealAt) {
+                op = 0.12;
+            } else if (p < revealAt + fadeRange) {
+                op = 0.12 + 0.88 * ((p - revealAt) / fadeRange);
             } else {
-                line.classList.remove('revealed');
+                op = 1;
             }
+            line.style.opacity = op;
+            line.style.color = '#ffffff';
         });
         requestAnimationFrame(update);
     }
