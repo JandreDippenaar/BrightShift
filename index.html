@@ -10,8 +10,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Sky layers -->
+    <div id="sky">
+        <canvas id="starfield"></canvas>
+        <div id="sky-gradient"></div>
+        <div id="sun">
+            <div class="sun-core"></div>
+            <div class="sun-glow"></div>
+            <div class="sun-rays"></div>
+        </div>
+        <div id="horizon"></div>
+    </div>
+
+    <!-- Interactive grid -->
     <canvas id="grid-canvas"></canvas>
-    <div id="particles"></div>
 
     <!-- Navigation -->
     <nav class="nav">
@@ -30,52 +42,59 @@
         </button>
     </nav>
 
-    <!-- Hero -->
+    <!-- Hero (NIGHT - the grind) -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">
+            <div class="hero-badge night-badge">
                 <span class="pulse-dot"></span>
-                AI Consulting &amp; Implementation
+                Sound familiar?
             </div>
             <h1>
-                Stop doing work<br>
-                <span class="gradient-text">that drains your soul</span>.<br>
-                Let AI handle it.
+                Drowning in<br>
+                <span class="gradient-text">soul-draining tasks</span><br>
+                every single day.
             </h1>
             <p class="hero-sub">
-                I help everyday people and businesses find the tasks that waste their time
-                and energy &mdash; then I build AI workflows that handle them, so you can
-                focus on work that actually matters to you.
+                Copy-pasting data. Chasing emails. Formatting reports. Sorting spreadsheets.
+                You didn't start your career to do <em>this</em>.
             </p>
-            <div class="hero-actions">
-                <a href="#contact" class="btn btn-primary">
-                    <span>Let's Talk</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </a>
-                <a href="#services" class="btn btn-ghost">See How It Works</a>
-            </div>
-        </div>
-        <div class="hero-visual">
-            <div class="orbit-system">
-                <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
-                <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
-                <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
-                <div class="orbit-core">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#hex-grad)" stroke-width="1.5"/>
-                        <path d="M20 12L28 17V23L20 28L12 23V17L20 12Z" stroke="url(#hex-grad)" stroke-width="1"/>
-                        <circle cx="20" cy="20" r="3" fill="url(#hex-grad)"/>
-                        <defs>
-                            <linearGradient id="hex-grad" x1="5" y1="5" x2="35" y2="35">
-                                <stop stop-color="#00f0ff"/>
-                                <stop offset="1" stop-color="#7b61ff"/>
-                            </linearGradient>
-                        </defs>
+            <div class="scroll-hint">
+                <span>Scroll to see the shift</span>
+                <div class="scroll-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 4v12M6 12l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
             </div>
+        </div>
+        <div class="hero-visual">
+            <div class="clock-prison">
+                <svg width="200" height="200" viewBox="0 0 200 200" fill="none" class="clock-svg">
+                    <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                    <circle cx="100" cy="100" r="70" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    <!-- Hour marks -->
+                    <line x1="100" y1="15" x2="100" y2="25" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                    <line x1="100" y1="175" x2="100" y2="185" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                    <line x1="15" y1="100" x2="25" y2="100" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                    <line x1="175" y1="100" x2="185" y2="100" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                    <!-- Hands spinning (animated in CSS) -->
+                    <line x1="100" y1="100" x2="100" y2="40" stroke="currentColor" stroke-width="2" opacity="0.5" class="clock-hour"/>
+                    <line x1="100" y1="100" x2="100" y2="30" stroke="currentColor" stroke-width="1.5" opacity="0.4" class="clock-minute"/>
+                    <circle cx="100" cy="100" r="4" fill="currentColor" opacity="0.5"/>
+                </svg>
+                <div class="clock-label">Time lost</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transition section -->
+    <section class="transition-section">
+        <div class="transition-content">
+            <h2 class="transition-text">
+                <span class="fade-line" data-reveal="0.15">What if you could hand off the grind?</span><br>
+                <span class="fade-line" data-reveal="0.25">What if AI did the boring parts?</span><br>
+                <span class="fade-line" data-reveal="0.35">What if you only did work <em>you love</em>?</span>
+            </h2>
         </div>
     </section>
 
@@ -87,8 +106,8 @@
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
-            <span class="stat-number" data-target="3">0</span><span class="stat-suffix">x</span>
-            <span class="stat-label">Avg. Time Saved</span>
+            <span class="stat-number" data-target="15">0</span><span class="stat-suffix">hrs</span>
+            <span class="stat-label">Saved Per Week</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
@@ -97,7 +116,7 @@
         </div>
     </section>
 
-    <!-- Services -->
+    <!-- Services (DAWN - the shift begins) -->
     <section id="services" class="services">
         <div class="section-header">
             <span class="section-tag">// SERVICES</span>
@@ -176,7 +195,7 @@
         </div>
     </section>
 
-    <!-- Process -->
+    <!-- Process (SUNRISE - clarity) -->
     <section id="process" class="process">
         <div class="section-header">
             <span class="section-tag">// PROCESS</span>
@@ -218,7 +237,7 @@
         </div>
     </section>
 
-    <!-- About -->
+    <!-- About (GOLDEN HOUR) -->
     <section id="about" class="about">
         <div class="about-grid">
             <div class="about-text">
@@ -266,12 +285,12 @@
         </div>
     </section>
 
-    <!-- Contact -->
+    <!-- Contact (FULL DAYLIGHT - new beginning) -->
     <section id="contact" class="contact">
         <div class="contact-content">
-            <span class="section-tag">// CONTACT</span>
+            <span class="section-tag">// NEW DAY</span>
             <h2>Ready to get your <span class="gradient-text">time back</span>?</h2>
-            <p>Tell me what's eating your hours. Let's figure out how AI can give them back to you.</p>
+            <p>The sun's up. The grind is over. Let's talk about your bright shift.</p>
             <div class="contact-methods">
                 <a href="mailto:hello@yoursite.ai" class="contact-card">
                     <div class="contact-icon">
@@ -294,7 +313,6 @@
                 </a>
             </div>
         </div>
-        <div class="contact-glow"></div>
     </section>
 
     <!-- Footer -->
