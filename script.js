@@ -111,11 +111,11 @@ function multiLerp(stops, t) {
     function draw(time) {
         ctx.clearRect(0, 0, w, h);
 
-        // Fade stars out as sun rises (0->0.3 = full stars, 0.3->0.55 = fade out)
-        const starOpacity = scrollProgress < 0.2
+        // Fade stars out across full scroll (0->0.3 = full stars, 0.3->0.6 = fade out)
+        const starOpacity = scrollProgress < 0.3
             ? 1
-            : scrollProgress < 0.5
-                ? 1 - (scrollProgress - 0.2) / 0.3
+            : scrollProgress < 0.6
+                ? 1 - (scrollProgress - 0.3) / 0.3
                 : 0;
 
         if (starOpacity <= 0) {
@@ -151,54 +151,51 @@ function multiLerp(stops, t) {
     function update() {
         const p = scrollProgress;
 
-        // Sky gradient: invisible at night, fades in at dawn
-        if (p < 0.1) {
+        // Sky gradient: invisible at night, reaches full day at p=1.0
+        if (p < 0.15) {
             skyGrad.style.opacity = 0;
-        } else if (p < 0.6) {
-            const skyP = (p - 0.1) / 0.5;
-            skyGrad.style.opacity = skyP;
+        } else {
+            const skyP = (p - 0.15) / 0.85; // 0.15 -> 1.0 mapped to 0 -> 1
+            skyGrad.style.opacity = Math.min(1, skyP * 1.3); // fade in faster than color shift
 
             const topColor = multiLerp([
                 [PALETTE.skyTop, 0],
-                [PALETTE.skyMid, 0.4],
+                [PALETTE.skyMid, 0.35],
                 [PALETTE.skyDayTop, 1]
             ], skyP);
 
             const bottomColor = multiLerp([
                 [PALETTE.skyMid, 0],
-                [PALETTE.skyHorizon, 0.4],
+                [PALETTE.skyHorizon, 0.35],
                 [PALETTE.skyDayBot, 1]
             ], skyP);
 
             skyGrad.style.background = `linear-gradient(to bottom, ${rgbStr(topColor)}, ${rgbStr(bottomColor)})`;
-        } else {
-            skyGrad.style.opacity = 1;
-            skyGrad.style.background = `linear-gradient(to bottom, ${rgbStr(PALETTE.skyDayTop)}, ${rgbStr(PALETTE.skyDayBot)})`;
         }
 
-        // Sun position: rises from below horizon
-        // Starts appearing at p=0.2, fully risen by p=0.7
-        if (p < 0.15) {
+        // Sun position: rises from below horizon across full scroll
+        // Starts at p=0.2, fully risen at p=1.0
+        if (p < 0.2) {
             sun.style.bottom = '-400px';
             if (sunCore) sunCore.style.opacity = 0;
             if (sunGlow) sunGlow.style.opacity = 0;
             if (sunRays) sunRays.style.opacity = 0;
         } else {
-            const sunP = Math.min(1, (p - 0.15) / 0.55);
-            const eased = 1 - Math.pow(1 - sunP, 3); // ease out cubic
-            const bottomPos = -400 + eased * 650; // -400 to 250
+            const sunP = Math.min(1, (p - 0.2) / 0.8); // 0.2 -> 1.0
+            const eased = 1 - Math.pow(1 - sunP, 3);
+            const bottomPos = -400 + eased * 650;
             sun.style.bottom = bottomPos + 'px';
 
             const coreOpacity = Math.min(1, sunP * 1.5);
             if (sunCore) sunCore.style.opacity = coreOpacity;
             if (sunGlow) sunGlow.style.opacity = coreOpacity * 0.8;
-            if (sunRays) sunRays.style.opacity = Math.max(0, (sunP - 0.3) / 0.7) * 0.6;
+            if (sunRays) sunRays.style.opacity = Math.max(0, (sunP - 0.4) / 0.6) * 0.6;
         }
 
-        // Horizon glow
+        // Horizon glow — appears mid-scroll, fades at the very end
         if (horizon) {
-            const hP = Math.max(0, Math.min(1, (p - 0.1) / 0.3));
-            const hFade = p > 0.6 ? Math.max(0, 1 - (p - 0.6) / 0.3) : 1;
+            const hP = Math.max(0, Math.min(1, (p - 0.15) / 0.35));
+            const hFade = p > 0.8 ? Math.max(0, 1 - (p - 0.8) / 0.2) : 1;
             horizon.style.background = `linear-gradient(to right, transparent, rgba(255, 140, 50, ${0.5 * hP * hFade}), rgba(255, 200, 100, ${0.8 * hP * hFade}), rgba(255, 140, 50, ${0.5 * hP * hFade}), transparent)`;
             horizon.style.height = (2 + hP * 3) + 'px';
             horizon.style.boxShadow = `0 0 ${40 * hP * hFade}px ${20 * hP * hFade}px rgba(255, 150, 50, ${0.3 * hP * hFade})`;
@@ -217,19 +214,19 @@ function multiLerp(stops, t) {
     function update() {
         const p = scrollProgress;
 
-        // Accent color transition
+        // Accent color transition — spans full scroll
         const accent = multiLerp([
             [PALETTE.accentNight, 0],
-            [PALETTE.accentDawn, 0.25],
-            [PALETTE.accentRise, 0.5],
-            [PALETTE.accentDay, 0.75]
+            [PALETTE.accentDawn, 0.35],
+            [PALETTE.accentRise, 0.65],
+            [PALETTE.accentDay, 1.0]
         ], p);
 
         const secondary = multiLerp([
             [PALETTE.secNight, 0],
-            [PALETTE.secDawn, 0.25],
-            [PALETTE.secRise, 0.5],
-            [PALETTE.secDay, 0.75]
+            [PALETTE.secDawn, 0.35],
+            [PALETTE.secRise, 0.65],
+            [PALETTE.secDay, 1.0]
         ], p);
 
         root.style.setProperty('--accent', rgbStr(accent));
@@ -240,9 +237,9 @@ function multiLerp(stops, t) {
         if (nav) {
             const bg = multiLerp([
                 [PALETTE.bgNight, 0],
-                [PALETTE.bgDawn, 0.3],
-                [PALETTE.bgSunrise, 0.5],
-                [PALETTE.bgDay, 0.8]
+                [PALETTE.bgDawn, 0.35],
+                [PALETTE.bgSunrise, 0.65],
+                [PALETTE.bgDay, 1.0]
             ], p);
             nav.style.background = `rgba(${bg[0]}, ${bg[1]}, ${bg[2]}, 0.85)`;
         }
@@ -250,17 +247,17 @@ function multiLerp(stops, t) {
         // Card backgrounds adapt subtly
         const cardBg = multiLerp([
             [[15, 15, 26], 0],
-            [[20, 15, 25], 0.3],
-            [[25, 18, 18], 0.6],
-            [[30, 25, 18], 0.9]
-        ].map(([c, p]) => [c, p]), p);
+            [[20, 15, 25], 0.4],
+            [[25, 18, 18], 0.7],
+            [[30, 25, 18], 1.0]
+        ], p);
 
         root.style.setProperty('--bg-card', rgbStr(cardBg));
 
         const elevBg = multiLerp([
             [[12, 12, 20], 0],
-            [[18, 14, 22], 0.4],
-            [[25, 20, 16], 0.8]
+            [[18, 14, 22], 0.5],
+            [[25, 20, 16], 1.0]
         ], p);
         root.style.setProperty('--bg-elevated', rgbStr(elevBg));
 
@@ -296,17 +293,17 @@ function multiLerp(stops, t) {
 
         const dotColor = multiLerp([
             [PALETTE.gridNight, 0],
-            [PALETTE.accentDawn, 0.3],
-            [PALETTE.gridDay, 0.7]
+            [PALETTE.accentDawn, 0.45],
+            [PALETTE.gridDay, 1.0]
         ], scrollProgress);
 
-        // Fade grid out during peak sunrise for drama, fade back in
-        const gridOpacity = scrollProgress < 0.3
+        // Fade grid out during sunrise drama, fade back in
+        const gridOpacity = scrollProgress < 0.4
             ? 0.4
-            : scrollProgress < 0.5
-                ? 0.4 - (scrollProgress - 0.3) * 1.5
-                : scrollProgress < 0.65
-                    ? 0.1 + (scrollProgress - 0.5) * 1.5
+            : scrollProgress < 0.6
+                ? 0.4 - (scrollProgress - 0.4) * 1.5
+                : scrollProgress < 0.8
+                    ? 0.1 + (scrollProgress - 0.6) * 1.25
                     : 0.35;
 
         canvas.style.opacity = gridOpacity;
