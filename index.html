@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrightShift &mdash; AI That Gives You Your Time Back</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="grid-canvas"></canvas>
+    <div id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">
+            <span class="brand-icon">&#9670;</span>
+            <span class="brand-text">BRIGHT<span class="accent">SHIFT</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#services">Services</a>
+            <a href="#process">Process</a>
+            <a href="#about">About</a>
+            <a href="#contact" class="nav-cta">Get in Touch</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                AI Consulting &amp; Implementation
+            </div>
+            <h1>
+                Stop doing work<br>
+                <span class="gradient-text">that drains your soul</span>.<br>
+                Let AI handle it.
+            </h1>
+            <p class="hero-sub">
+                I help everyday people and businesses find the tasks that waste their time
+                and energy &mdash; then I build AI workflows that handle them, so you can
+                focus on work that actually matters to you.
+            </p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary">
+                    <span>Let's Talk</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="#services" class="btn btn-ghost">See How It Works</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="orbit-system">
+                <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+                <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+                <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+                <div class="orbit-core">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#hex-grad)" stroke-width="1.5"/>
+                        <path d="M20 12L28 17V23L20 28L12 23V17L20 12Z" stroke="url(#hex-grad)" stroke-width="1"/>
+                        <circle cx="20" cy="20" r="3" fill="url(#hex-grad)"/>
+                        <defs>
+                            <linearGradient id="hex-grad" x1="5" y1="5" x2="35" y2="35">
+                                <stop stop-color="#00f0ff"/>
+                                <stop offset="1" stop-color="#7b61ff"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-bar">
+        <div class="stat">
+            <span class="stat-number" data-target="50">0</span><span class="stat-suffix">+</span>
+            <span class="stat-label">People Helped</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-number" data-target="3">0</span><span class="stat-suffix">x</span>
+            <span class="stat-label">Avg. Time Saved</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-number" data-target="98">0</span><span class="stat-suffix">%</span>
+            <span class="stat-label">Client Satisfaction</span>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <div class="section-header">
+            <span class="section-tag">// SERVICES</span>
+            <h2>How I can <span class="gradient-text">help</span></h2>
+            <p>I find what's eating your time, then build the AI to take it off your plate.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M16 10L22 13V19L16 22L10 19V13L16 10Z" stroke="currentColor" stroke-width="1"/>
+                    </svg>
+                </div>
+                <h3>Workflow Audit</h3>
+                <p>I sit down with you, map out your daily tasks, and pinpoint exactly where AI can save you the most time and headaches.</p>
+                <span class="service-tag">Consulting</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 15l3 3 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Task Automation</h3>
+                <p>Those repetitive, soul-draining tasks? I build AI systems that handle them automatically &mdash; so you never have to again.</p>
+                <span class="service-tag">Implementation</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M16 10v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3>Smart Assistants</h3>
+                <p>Custom AI assistants that work like a tireless team member &mdash; answering questions, sorting information, and handling decisions for you.</p>
+                <span class="service-tag">Implementation</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M8 8h16v16H8z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M12 4v4M20 4v4M12 24v4M20 24v4M4 12h4M4 20h4M24 12h4M24 20h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3>AI-Powered Tools</h3>
+                <p>I plug AI directly into the tools you already use &mdash; your email, documents, spreadsheets, CRM &mdash; making everything smarter.</p>
+                <span class="service-tag">Implementation</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M6 22l6-8 5 4 4-6 5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3>Personal Workflows</h3>
+                <p>Not just business &mdash; I help individuals automate their personal routines, from scheduling to research to content creation.</p>
+                <span class="service-tag">Consulting + Implementation</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 6v4M16 22v4M6 16h4M22 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M9 9l2 2M21 21l2 2M9 23l2-2M21 9l2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3>AI Training</h3>
+                <p>No tech background needed. I teach you and your team how to use AI tools effectively, in plain language you'll actually understand.</p>
+                <span class="service-tag">Consulting</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process -->
+    <section id="process" class="process">
+        <div class="section-header">
+            <span class="section-tag">// PROCESS</span>
+            <h2>How we <span class="gradient-text">work</span></h2>
+            <p>Simple, transparent, and built around your needs &mdash; not tech jargon.</p>
+        </div>
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3>Discovery</h3>
+                    <p>We have a conversation about your day-to-day. What do you spend time on? What drains you? What do you wish you could hand off?</p>
+                </div>
+                <div class="step-line"></div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3>Game Plan</h3>
+                    <p>I show you exactly what we can automate, how it'll work in plain English, and what kind of time you'll get back. No surprises.</p>
+                </div>
+                <div class="step-line"></div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3>Build &amp; Test</h3>
+                    <p>I build the AI workflows and test them with you. You'll see it working, try it yourself, and we'll fine-tune until it feels right.</p>
+                </div>
+                <div class="step-line"></div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">04</div>
+                <div class="step-content">
+                    <h3>Launch &amp; Support</h3>
+                    <p>Your new AI workflows go live. I stick around to make sure everything runs smoothly and adjust as your needs evolve.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="about-grid">
+            <div class="about-text">
+                <span class="section-tag">// ABOUT</span>
+                <h2>I don't just advise.<br>I <span class="gradient-text">build</span>.</h2>
+                <p>
+                    Most consultants hand you a slide deck and walk away. I'm different &mdash;
+                    I sit with you, understand your world, find the tasks that are stealing
+                    your time and joy, and then I actually build the AI that fixes it.
+                </p>
+                <p>
+                    You don't need to understand AI. You just need to know what you'd rather
+                    be doing with your time. I'll handle the rest.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">ChatGPT</span>
+                    <span class="tech-tag">Claude</span>
+                    <span class="tech-tag">Automation</span>
+                    <span class="tech-tag">AI Agents</span>
+                    <span class="tech-tag">Zapier</span>
+                    <span class="tech-tag">Make.com</span>
+                    <span class="tech-tag">Custom Tools</span>
+                    <span class="tech-tag">Integrations</span>
+                    <span class="tech-tag">Training</span>
+                </div>
+            </div>
+            <div class="about-visual">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="terminal-title">~/projects</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="t-prompt">$</span>
+                            <span class="t-command" id="typewriter"></span>
+                            <span class="t-cursor">|</span>
+                        </div>
+                        <div class="terminal-output" id="terminal-output"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="contact-content">
+            <span class="section-tag">// CONTACT</span>
+            <h2>Ready to get your <span class="gradient-text">time back</span>?</h2>
+            <p>Tell me what's eating your hours. Let's figure out how AI can give them back to you.</p>
+            <div class="contact-methods">
+                <a href="mailto:hello@yoursite.ai" class="contact-card">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M2 7l10 6 10-6" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value">hello@yoursite.ai</span>
+                </a>
+                <a href="#" class="contact-card">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="contact-label">Schedule</span>
+                    <span class="contact-value">Book a 30-min call</span>
+                </a>
+            </div>
+        </div>
+        <div class="contact-glow"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="brand-icon">&#9670;</span>
+                <span class="brand-text">BRIGHT<span class="accent">SHIFT</span></span>
+            </div>
+            <span class="footer-copy">&copy; 2026 All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
