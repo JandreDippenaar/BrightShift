@@ -372,7 +372,6 @@ function multiLerp(stops, t) {
 
     const slideCount = dots.length;
     let current = 0;
-    let autoTimer = null;
 
     function goTo(idx) {
         current = Math.max(0, Math.min(idx, slideCount - 1));
@@ -387,12 +386,6 @@ function multiLerp(stops, t) {
             else window._webappBuild.stop();
         }
 
-        // Reset auto-advance timer (per-slide durations)
-        const slideDurations = [4000, 7000, 8000]; // report, webapp, KB
-        clearTimeout(autoTimer);
-        autoTimer = setTimeout(() => {
-            goTo((current + 1) % slideCount);
-        }, slideDurations[current] || 6000);
     }
 
     dots.forEach(dot => {

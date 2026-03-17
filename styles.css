@@ -680,7 +680,21 @@ body {
 }
 
 .carousel-prev { left: 1rem; }
-.carousel-next { right: 1rem; }
+.carousel-next {
+    right: 1rem;
+    animation: nudge-right 2s ease-in-out infinite;
+}
+
+@keyframes nudge-right {
+    0%, 60%, 100% { transform: translateY(-50%) translateX(0); }
+    70% { transform: translateY(-50%) translateX(5px); }
+    80% { transform: translateY(-50%) translateX(0); }
+    90% { transform: translateY(-50%) translateX(3px); }
+}
+
+.carousel-next:disabled {
+    animation: none;
+}
 
 .carousel-arrow:hover {
     color: var(--accent);
