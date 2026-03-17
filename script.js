@@ -916,7 +916,7 @@ window._webappBuild = {
 
     const sequences = [
         {
-            cmd: 'brightshift --analyze "daily-tasks"',
+            cmd: 'dawn --analyze "daily-tasks"',
             output: [
                 '<span class="t-info">Scanning your workflows...</span>',
                 '<span class="t-success">Found 12 automatable tasks</span>',
@@ -924,7 +924,7 @@ window._webappBuild = {
             ]
         },
         {
-            cmd: 'brightshift --deploy "email-sorter"',
+            cmd: 'dawn --deploy "email-sorter"',
             output: [
                 '<span class="t-info">Building AI assistant...</span>',
                 '<span class="t-info">Connecting to your inbox...</span>',
@@ -933,7 +933,7 @@ window._webappBuild = {
             ]
         },
         {
-            cmd: 'brightshift --status',
+            cmd: 'dawn --status',
             output: [
                 '<span class="t-success">All 5 workflows running</span>',
                 '<span class="t-info">Tasks automated today: 47</span>',
