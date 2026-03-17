@@ -502,65 +502,93 @@ function multiLerp(stops, t) {
     if (kbDemo) observer.observe(kbDemo);
 })();
 
-// ---- Sky Elements (scroll-driven) ----
+// ---- Sky Elements (time-driven, scroll-gated) ----
 (function initSkyElements() {
     const shootingStar = document.querySelector('.shooting-star');
     const satellite = document.querySelector('.satellite');
     const birds = document.querySelectorAll('.bird');
-    if (!shootingStar && !satellite && !birds.length) return;
 
     const vw = () => window.innerWidth;
     const vh = () => window.innerHeight;
 
-    function update() {
-        const p = scrollProgress;
+    // Shooting star: flies across on its own, repeats every 6s, only during night
+    if (shootingStar) {
+        let starStart = performance.now();
+        const starDuration = 1500; // 1.5s to cross
+        const starInterval = 8000; // every 8s
 
-        // Shooting star: visible 0.05-0.2, streaks diagonally
-        if (shootingStar) {
-            if (p > 0.05 && p < 0.2) {
-                const t = (p - 0.05) / 0.15;
-                shootingStar.style.opacity = t < 0.5 ? t * 2 : (1 - t) * 2;
-                shootingStar.style.left = (vw() * 0.8 - t * vw() * 0.6) + 'px';
-                shootingStar.style.top = (vh() * 0.1 + t * vh() * 0.3) + 'px';
+        function animateStar(now) {
+            const p = scrollProgress;
+            const elapsed = (now - starStart) % starInterval;
+            const t = elapsed / starDuration;
+
+            if (p < 0.35 && t >= 0 && t <= 1) {
+                shootingStar.style.opacity = t < 0.1 ? t * 10 : t > 0.7 ? (1 - t) / 0.3 : 0.9;
+                shootingStar.style.left = (vw() * 0.85 - t * vw() * 0.7) + 'px';
+                shootingStar.style.top = (vh() * 0.08 + t * vh() * 0.35) + 'px';
                 shootingStar.style.transform = 'rotate(-35deg)';
             } else {
                 shootingStar.style.opacity = 0;
             }
+            requestAnimationFrame(animateStar);
         }
+        requestAnimationFrame(animateStar);
+    }
 
-        // Satellite: visible 0.1-0.35, drifts slowly across
-        if (satellite) {
-            if (p > 0.1 && p < 0.35) {
-                const t = (p - 0.1) / 0.25;
-                satellite.style.opacity = 0.6 * (t < 0.3 ? t / 0.3 : t > 0.7 ? (1 - t) / 0.3 : 1);
-                satellite.style.left = (vw() * 0.15 + t * vw() * 0.5) + 'px';
-                satellite.style.top = (vh() * 0.15 - Math.sin(t * Math.PI) * vh() * 0.08) + 'px';
+    // Satellite: drifts slowly on its own, only during night/pre-dawn
+    if (satellite) {
+        let satStart = performance.now();
+        const satDuration = 20000; // 20s to cross
+
+        function animateSat(now) {
+            const p = scrollProgress;
+            const t = ((now - satStart) % satDuration) / satDuration;
+
+            if (p < 0.4) {
+                const fade = Math.min(1, (0.4 - p) / 0.1); // fade out near dawn
+                satellite.style.opacity = 0.5 * fade;
+                satellite.style.left = (t * vw() * 1.2 - vw() * 0.1) + 'px';
+                satellite.style.top = (vh() * 0.12 + Math.sin(t * Math.PI) * vh() * 0.1) + 'px';
             } else {
                 satellite.style.opacity = 0;
             }
+            requestAnimationFrame(animateSat);
         }
-
-        // Birds: visible 0.6-0.9, fly across at different heights/speeds
-        birds.forEach((bird, i) => {
-            const start = 0.55 + i * 0.05;
-            const end = 0.85 + i * 0.05;
-            if (p > start && p < end) {
-                const t = (p - start) / (end - start);
-                const fadeIn = Math.min(1, t * 4);
-                const fadeOut = Math.min(1, (1 - t) * 4);
-                bird.style.opacity = Math.min(fadeIn, fadeOut) * 0.7;
-                bird.style.left = (-30 + t * (vw() + 60)) + 'px';
-                // Each bird at different height with gentle sine wave
-                const baseY = vh() * (0.2 + i * 0.12);
-                bird.style.top = (baseY + Math.sin(t * Math.PI * 3) * 15) + 'px';
-            } else {
-                bird.style.opacity = 0;
-            }
-        });
-
-        requestAnimationFrame(update);
+        requestAnimationFrame(animateSat);
     }
-    requestAnimationFrame(update);
+
+    // Birds: fly across on their own during sunrise, repeat
+    if (birds.length) {
+        const birdConfigs = [
+            { duration: 12000, interval: 15000, yBase: 0.2, yWave: 12 },
+            { duration: 14000, interval: 18000, yBase: 0.3, yWave: 8 },
+            { duration: 10000, interval: 20000, yBase: 0.15, yWave: 15 },
+        ];
+
+        birds.forEach((bird, i) => {
+            const cfg = birdConfigs[i] || birdConfigs[0];
+            const birdStart = performance.now() + i * 3000; // stagger start
+
+            function animateBird(now) {
+                const p = scrollProgress;
+                const elapsed = (now - birdStart);
+                if (elapsed < 0) { requestAnimationFrame(animateBird); return; }
+                const t = (elapsed % cfg.interval) / cfg.duration;
+
+                if (p > 0.45 && t >= 0 && t <= 1) {
+                    const fadeIn = Math.min(1, t * 5);
+                    const fadeOut = Math.min(1, (1 - t) * 5);
+                    bird.style.opacity = Math.min(fadeIn, fadeOut) * 0.8;
+                    bird.style.left = (-40 + t * (vw() + 80)) + 'px';
+                    bird.style.top = (vh() * cfg.yBase + Math.sin(t * Math.PI * 4) * cfg.yWave) + 'px';
+                } else {
+                    bird.style.opacity = 0;
+                }
+                requestAnimationFrame(animateBird);
+            }
+            requestAnimationFrame(animateBird);
+        });
+    }
 })();
 
 // ---- Webapp Build Animation ----
