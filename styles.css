@@ -946,19 +946,18 @@ body {
     background: var(--accent);
     opacity: 0.3;
     border-radius: 2px 2px 0 0;
-    animation: bar-grow 2s ease-out forwards;
-    transform-origin: bottom;
-    transform: scaleY(0);
+    animation: bar-live 3s ease-in-out infinite;
 }
 
-.chart-bar:nth-child(1) { animation-delay: 1.2s; }
-.chart-bar:nth-child(2) { animation-delay: 1.4s; }
-.chart-bar:nth-child(3) { animation-delay: 1.6s; }
-.chart-bar:nth-child(4) { animation-delay: 1.8s; }
+.chart-bar:nth-child(1) { animation-delay: 0s; }
+.chart-bar:nth-child(2) { animation-delay: 0.5s; }
+.chart-bar:nth-child(3) { animation-delay: 1.0s; }
+.chart-bar:nth-child(4) { animation-delay: 1.5s; }
 .chart-bar:nth-child(5) { animation-delay: 2.0s; }
 
-@keyframes bar-grow {
-    to { transform: scaleY(1); }
+@keyframes bar-live {
+    0%, 100% { height: var(--h); }
+    50% { height: var(--h2, var(--h)); }
 }
 
 .output-label {
