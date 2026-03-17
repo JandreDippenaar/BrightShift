@@ -362,6 +362,177 @@ function multiLerp(stops, t) {
     requestAnimationFrame(update);
 })();
 
+// ---- Flow Demo (Report Generation Animation) ----
+(function initFlowDemo() {
+    const canvas = document.getElementById('flow-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const sources = document.querySelectorAll('.flow-source');
+    const hub = document.querySelector('.hub-core');
+    const report = document.querySelector('.report-card');
+    if (!sources.length || !hub || !report) return;
+
+    let particles = [];
+    let w, h;
+    let running = false;
+
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width;
+        h = canvas.height = rect.height;
+    }
+
+    function getCenter(el) {
+        const canvasRect = canvas.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2 - canvasRect.left,
+            y: rect.top + rect.height / 2 - canvasRect.top
+        };
+    }
+
+    function spawnParticle() {
+        const sourceIdx = Math.floor(Math.random() * sources.length);
+        const from = getCenter(sources[sourceIdx]);
+        const hubPos = getCenter(hub);
+        const reportPos = getCenter(report);
+
+        // Source colors
+        const colors = ['#00f0ff', '#7b61ff', '#4d7cff', '#ff6b9d'];
+        const color = colors[sourceIdx % colors.length];
+
+        particles.push({
+            x: from.x, y: from.y,
+            phase: 0, // 0 = to hub, 1 = to report
+            fromX: from.x, fromY: from.y,
+            hubX: hubPos.x, hubY: hubPos.y,
+            reportX: reportPos.x, reportY: reportPos.y,
+            progress: 0,
+            speed: 0.008 + Math.random() * 0.006,
+            size: 2 + Math.random() * 2,
+            color: color,
+            outputColor: '#ffbe3c'
+        });
+    }
+
+    function draw() {
+        if (!running) return;
+        ctx.clearRect(0, 0, w, h);
+        resize();
+
+        // Draw faint connection lines
+        const hubPos = getCenter(hub);
+        const reportPos = getCenter(report);
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.lineWidth = 1;
+
+        sources.forEach(src => {
+            const from = getCenter(src);
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            // Curved line to hub
+            const cpx = (from.x + hubPos.x) / 2;
+            const cpy = from.y + (hubPos.y - from.y) * 0.1;
+            ctx.quadraticCurveTo(cpx, cpy, hubPos.x, hubPos.y);
+            ctx.stroke();
+        });
+
+        // Hub to report line
+        ctx.beginPath();
+        ctx.moveTo(hubPos.x, hubPos.y);
+        ctx.lineTo(reportPos.x, reportPos.y);
+        ctx.stroke();
+
+        // Spawn new particles
+        if (Math.random() < 0.08) spawnParticle();
+
+        // Update & draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.progress += p.speed;
+
+            if (p.phase === 0) {
+                // Moving to hub
+                const t = Math.min(1, p.progress);
+                const eased = t * t * (3 - 2 * t); // smoothstep
+                p.x = p.fromX + (p.hubX - p.fromX) * eased;
+                p.y = p.fromY + (p.hubY - p.fromY) * eased;
+                // Add slight curve
+                const curve = Math.sin(eased * Math.PI) * 15;
+                p.x += curve * (p.fromY > p.hubY ? -1 : 1) * 0.3;
+
+                if (t >= 1) {
+                    p.phase = 1;
+                    p.progress = 0;
+                    p.fromX = p.hubX;
+                    p.fromY = p.hubY;
+                }
+
+                // Draw with source color
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                const alpha = 0.4 + 0.4 * Math.sin(eased * Math.PI);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = alpha;
+                ctx.fill();
+                // Glow
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = alpha * 0.15;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+            } else {
+                // Moving to report (golden color)
+                const t = Math.min(1, p.progress);
+                const eased = t * t * (3 - 2 * t);
+                p.x = p.fromX + (p.reportX - p.fromX) * eased;
+                p.y = p.fromY + (p.reportY - p.fromY) * eased;
+
+                if (t >= 1) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
+                const alpha = 0.5 + 0.3 * Math.sin(eased * Math.PI);
+                ctx.fillStyle = p.outputColor;
+                ctx.globalAlpha = alpha;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = p.outputColor;
+                ctx.globalAlpha = alpha * 0.12;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // Cap particles
+        if (particles.length > 30) particles.splice(0, particles.length - 30);
+
+        requestAnimationFrame(draw);
+    }
+
+    // Start when visible
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !running) {
+            running = true;
+            resize();
+            requestAnimationFrame(draw);
+        } else if (!entries[0].isIntersecting) {
+            running = false;
+        }
+    }, { threshold: 0.2 });
+
+    observer.observe(canvas.parentElement);
+    window.addEventListener('resize', resize);
+})();
+
 // ---- Mobile Nav ----
 (function initMobileNav() {
     const toggle = document.querySelector('.mobile-toggle');
