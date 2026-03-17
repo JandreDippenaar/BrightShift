@@ -523,10 +523,12 @@ function multiLerp(stops, t) {
             const t = elapsed / starDuration;
 
             if (p < 0.35 && t >= 0 && t <= 1) {
-                shootingStar.style.opacity = t < 0.1 ? t * 10 : t > 0.7 ? (1 - t) / 0.3 : 0.9;
-                shootingStar.style.left = (vw() * 0.85 - t * vw() * 0.7) + 'px';
-                shootingStar.style.top = (vh() * 0.08 + t * vh() * 0.35) + 'px';
-                shootingStar.style.transform = 'rotate(-35deg)';
+                // Quick bright flash then fade with the tail
+                shootingStar.style.opacity = t < 0.05 ? t * 20 : Math.max(0, 1 - t * 1.2);
+                // Left to right, top to bottom
+                shootingStar.style.left = (vw() * 0.1 + t * vw() * 0.7) + 'px';
+                shootingStar.style.top = (vh() * 0.05 + t * vh() * 0.3) + 'px';
+                shootingStar.style.transform = 'rotate(25deg)';
             } else {
                 shootingStar.style.opacity = 0;
             }

@@ -185,10 +185,12 @@ body {
     content: '';
     position: absolute;
     top: 0;
-    right: 100%;
+    left: 100%;
     width: 80px;
     height: 1.5px;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
+    transform: rotate(180deg);
+    transform-origin: left center;
 }
 
 .satellite {
