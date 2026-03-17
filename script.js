@@ -502,6 +502,67 @@ function multiLerp(stops, t) {
     if (kbDemo) observer.observe(kbDemo);
 })();
 
+// ---- Sky Elements (scroll-driven) ----
+(function initSkyElements() {
+    const shootingStar = document.querySelector('.shooting-star');
+    const satellite = document.querySelector('.satellite');
+    const birds = document.querySelectorAll('.bird');
+    if (!shootingStar && !satellite && !birds.length) return;
+
+    const vw = () => window.innerWidth;
+    const vh = () => window.innerHeight;
+
+    function update() {
+        const p = scrollProgress;
+
+        // Shooting star: visible 0.05-0.2, streaks diagonally
+        if (shootingStar) {
+            if (p > 0.05 && p < 0.2) {
+                const t = (p - 0.05) / 0.15;
+                shootingStar.style.opacity = t < 0.5 ? t * 2 : (1 - t) * 2;
+                shootingStar.style.left = (vw() * 0.8 - t * vw() * 0.6) + 'px';
+                shootingStar.style.top = (vh() * 0.1 + t * vh() * 0.3) + 'px';
+                shootingStar.style.transform = 'rotate(-35deg)';
+            } else {
+                shootingStar.style.opacity = 0;
+            }
+        }
+
+        // Satellite: visible 0.1-0.35, drifts slowly across
+        if (satellite) {
+            if (p > 0.1 && p < 0.35) {
+                const t = (p - 0.1) / 0.25;
+                satellite.style.opacity = 0.6 * (t < 0.3 ? t / 0.3 : t > 0.7 ? (1 - t) / 0.3 : 1);
+                satellite.style.left = (vw() * 0.15 + t * vw() * 0.5) + 'px';
+                satellite.style.top = (vh() * 0.15 - Math.sin(t * Math.PI) * vh() * 0.08) + 'px';
+            } else {
+                satellite.style.opacity = 0;
+            }
+        }
+
+        // Birds: visible 0.6-0.9, fly across at different heights/speeds
+        birds.forEach((bird, i) => {
+            const start = 0.55 + i * 0.05;
+            const end = 0.85 + i * 0.05;
+            if (p > start && p < end) {
+                const t = (p - start) / (end - start);
+                const fadeIn = Math.min(1, t * 4);
+                const fadeOut = Math.min(1, (1 - t) * 4);
+                bird.style.opacity = Math.min(fadeIn, fadeOut) * 0.7;
+                bird.style.left = (-30 + t * (vw() + 60)) + 'px';
+                // Each bird at different height with gentle sine wave
+                const baseY = vh() * (0.2 + i * 0.12);
+                bird.style.top = (baseY + Math.sin(t * Math.PI * 3) * 15) + 'px';
+            } else {
+                bird.style.opacity = 0;
+            }
+        });
+
+        requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+})();
+
 // ---- Webapp Build Animation ----
 // Exposed globally so the carousel can trigger it
 window._webappBuild = {
