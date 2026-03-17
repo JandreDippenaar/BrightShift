@@ -366,19 +366,30 @@ function multiLerp(stops, t) {
 (function initCarousel() {
     const track = document.querySelector('.carousel-track');
     const dots = document.querySelectorAll('.carousel-dot');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
     if (!track || !dots.length) return;
 
+    const slideCount = dots.length;
     let current = 0;
 
     function goTo(idx) {
-        current = idx;
-        track.style.transform = `translateX(-${idx * 100}%)`;
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        current = Math.max(0, Math.min(idx, slideCount - 1));
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        if (prevBtn) prevBtn.disabled = current === 0;
+        if (nextBtn) nextBtn.disabled = current === slideCount - 1;
     }
 
     dots.forEach(dot => {
         dot.addEventListener('click', () => goTo(parseInt(dot.dataset.slide)));
     });
+
+    if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    // Set initial arrow state
+    goTo(0);
 
     // Swipe support
     let startX = 0, diff = 0;

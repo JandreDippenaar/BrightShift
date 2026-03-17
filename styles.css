@@ -659,6 +659,46 @@ body {
     margin-right: auto;
 }
 
+/* Carousel arrows */
+.carousel-arrow {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.carousel-prev { left: 1rem; }
+.carousel-next { right: 1rem; }
+
+.carousel-arrow:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(10, 10, 20, 0.8);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+.carousel-arrow:disabled {
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+}
+
+@media (max-width: 640px) {
+    .carousel-arrow { display: none; }
+}
+
 /* Carousel dots */
 .carousel-nav {
     display: flex;
@@ -1571,6 +1611,13 @@ body {
     .stats-bar { flex-direction: column; gap: 1.5rem; }
     .stat-divider { width: 40px; height: 1px; }
     .orbit-system { width: 200px; height: 200px; }
+    .example-slide { padding: 0 1rem; }
+    .slide-title { font-size: 1.2rem; }
+    .slide-desc { font-size: 0.85rem; }
+    .carousel-track { overflow: visible; }
+    .report-card { width: 150px; }
+    .transition-section { min-height: 40vh; }
+    .transition-text { font-size: 1.3rem; }
 }
 
 /* Selection & Scrollbar */
