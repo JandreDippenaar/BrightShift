@@ -379,6 +379,12 @@ function multiLerp(stops, t) {
         dots.forEach((d, i) => d.classList.toggle('active', i === current));
         if (prevBtn) prevBtn.disabled = current === 0;
         if (nextBtn) nextBtn.disabled = current === slideCount - 1;
+
+        // Trigger/stop slide-specific animations
+        if (window._webappBuild) {
+            if (current === 2) window._webappBuild.start();
+            else window._webappBuild.stop();
+        }
     }
 
     dots.forEach(dot => {
@@ -496,65 +502,50 @@ function multiLerp(stops, t) {
 })();
 
 // ---- Webapp Build Animation ----
-(function initWebappBuild() {
-    const demo = document.querySelector('.webapp-demo');
-    if (!demo) return;
+// Exposed globally so the carousel can trigger it
+window._webappBuild = {
+    generation: 0,
+    start: function() {
+        const demo = document.querySelector('.webapp-demo');
+        if (!demo) return;
+        const reqs = demo.querySelectorAll('.req-card');
+        const parts = demo.querySelectorAll('.build-part');
+        const self = this;
+        self.generation++;
+        const gen = self.generation;
 
-    const reqs = demo.querySelectorAll('.req-card');
-    const parts = demo.querySelectorAll('.build-part');
-    let generation = 0;
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    async function runBuild(gen) {
-        // Reset everything
-        reqs.forEach(r => r.classList.remove('active-build'));
-        parts.forEach(p => p.classList.remove('built'));
-
-        await sleep(800);
-
-        // Build each step
-        for (let i = 0; i < reqs.length; i++) {
-            if (gen !== generation) return;
-
-            // Highlight requirement
-            reqs[i].classList.add('active-build');
-            await sleep(400);
-            if (gen !== generation) return;
-
-            // Build corresponding mockup part
-            parts.forEach(p => {
-                if (parseInt(p.dataset.step) === i) {
-                    p.classList.add('built');
-                }
-            });
+        async function runBuild() {
+            reqs.forEach(r => r.classList.remove('active-build'));
+            parts.forEach(p => p.classList.remove('built'));
 
             await sleep(800);
-            if (gen !== generation) return;
 
-            // Un-highlight requirement (keep check visible)
-            reqs[i].classList.remove('active-build');
+            for (let i = 0; i < reqs.length; i++) {
+                if (gen !== self.generation) return;
+                reqs[i].classList.add('active-build');
+                await sleep(400);
+                if (gen !== self.generation) return;
+                parts.forEach(p => {
+                    if (parseInt(p.dataset.step) === i) p.classList.add('built');
+                });
+                await sleep(800);
+                if (gen !== self.generation) return;
+                reqs[i].classList.remove('active-build');
+            }
+
+            await sleep(3000);
+            if (gen !== self.generation) return;
+            runBuild();
         }
 
-        // Hold the completed state
-        await sleep(3000);
-        if (gen !== generation) return;
-
-        // Loop
-        runBuild(gen);
+        runBuild();
+    },
+    stop: function() {
+        this.generation++;
     }
-
-    const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            generation++;
-            runBuild(generation);
-        } else {
-            generation++;
-        }
-    }, { threshold: 0.2 });
-
-    observer.observe(demo);
-})();
+};
 
 // ---- Knowledge Base Connecting Lines ----
 (function initKBLines() {
