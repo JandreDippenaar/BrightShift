@@ -287,6 +287,25 @@ body {
 .hero-content {
     flex: 1;
     max-width: 640px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: hero-enter 1s ease-out 0.3s forwards;
+}
+
+.hero-visual {
+    flex: 0 0 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: hero-enter 1s ease-out 0.6s forwards;
+}
+
+@keyframes hero-enter {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-badge,
@@ -368,12 +387,6 @@ body {
 }
 
 /* Hero visual - Orbits */
-.hero-visual {
-    flex: 0 0 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .orbit-system {
     position: relative;
@@ -1497,8 +1510,10 @@ body {
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .service-card {
@@ -1870,7 +1885,7 @@ body {
     .hero-sub { margin: 0 auto 2.5rem; }
     .hero-actions, .scroll-hint { justify-content: center; }
     .hero-visual { flex: none; }
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .services-grid { grid-template-columns: 1fr; }
     .about-grid { grid-template-columns: 1fr; gap: 3rem; }
     .stats-bar { gap: 2rem; flex-wrap: wrap; }
 }
