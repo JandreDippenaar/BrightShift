@@ -405,24 +405,206 @@ function multiLerp(stops, t) {
     });
 })();
 
-// ---- Knowledge Base Chat Animation ----
+// ---- Knowledge Base Chat Animation (cycling Q&A) ----
 (function initKBChat() {
-    const typing = document.getElementById('kb-typing');
-    const answer = document.getElementById('kb-answer');
-    if (!typing || !answer) return;
+    const chatBody = document.getElementById('kb-chat-body');
+    if (!chatBody) return;
+
+    const qaPairs = [
+        { q: "What's our leave policy?", a: "Employees get 20 days annual leave. Unused days carry over up to 5. Request via HR portal 2 weeks ahead." },
+        { q: "What was the main TODO from last week's meeting?", a: "Finalise the Q3 budget proposal and send it to Sarah by Friday. Jake is handling the vendor comparison." },
+        { q: "How do I request new equipment?", a: "Fill out the Equipment Request form on the intranet. Needs manager approval for items over R5,000. Typical turnaround is 3-5 days." },
+        { q: "What's the process for onboarding a new client?", a: "1) Signed SOW in shared drive. 2) Create project in Monday.com. 3) Intro call within 48hrs. 4) Kick-off doc from the template." },
+    ];
+
+    let currentIdx = 0;
+    let running = false;
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function showQA(idx) {
+        const pair = qaPairs[idx];
+
+        // Clear previous
+        chatBody.innerHTML = '';
+
+        // Type out user question
+        const userMsg = document.createElement('div');
+        userMsg.className = 'chat-msg user';
+        userMsg.innerHTML = '<span></span>';
+        chatBody.appendChild(userMsg);
+        const userSpan = userMsg.querySelector('span');
+        for (let i = 0; i < pair.q.length; i++) {
+            userSpan.textContent += pair.q[i];
+            await sleep(25);
+        }
+
+        await sleep(400);
+
+        // Show AI typing
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'chat-msg ai';
+        aiMsg.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div><span class="chat-answer-text"></span>';
+        chatBody.appendChild(aiMsg);
+
+        // Scroll chat to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        await sleep(1500);
+
+        // Replace typing with answer
+        const typingEl = aiMsg.querySelector('.chat-typing');
+        const answerEl = aiMsg.querySelector('.chat-answer-text');
+        typingEl.style.display = 'none';
+        answerEl.textContent = pair.a;
+        answerEl.style.display = 'inline';
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        await sleep(3500);
+
+        // Next question
+        currentIdx = (currentIdx + 1) % qaPairs.length;
+        if (running) showQA(currentIdx);
+    }
+
+    // Start when visible
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !running) {
+            running = true;
+            showQA(currentIdx);
+        } else if (!entries[0].isIntersecting) {
+            running = false;
+        }
+    }, { threshold: 0.2 });
+
+    const kbDemo = document.querySelector('.kb-demo');
+    if (kbDemo) observer.observe(kbDemo);
+})();
+
+// ---- Knowledge Base Connecting Lines ----
+(function initKBLines() {
+    const canvas = document.getElementById('kb-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const docs = document.querySelectorAll('.kb-doc');
+    const brain = document.querySelector('.brain-core');
+    const chat = document.querySelector('.chat-window');
+    if (!docs.length || !brain || !chat) return;
+
+    let particles = [];
+    let w, h, running = false;
+
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width;
+        h = canvas.height = rect.height;
+    }
+
+    function getCenter(el) {
+        const canvasRect = canvas.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2 - canvasRect.left,
+            y: rect.top + rect.height / 2 - canvasRect.top
+        };
+    }
+
+    function spawnParticle() {
+        const docIdx = Math.floor(Math.random() * docs.length);
+        const from = getCenter(docs[docIdx]);
+        const brainPos = getCenter(brain);
+        const chatPos = getCenter(chat);
+
+        particles.push({
+            x: from.x, y: from.y,
+            phase: 0,
+            fromX: from.x, fromY: from.y,
+            brainX: brainPos.x, brainY: brainPos.y,
+            chatX: chatPos.x, chatY: chatPos.y,
+            progress: 0,
+            speed: 0.007 + Math.random() * 0.005,
+            size: 1.5 + Math.random() * 1.5,
+        });
+    }
+
+    function draw() {
+        if (!running) return;
+        ctx.clearRect(0, 0, w, h);
+        resize();
+
+        const brainPos = getCenter(brain);
+        const chatPos = getCenter(chat);
+
+        // Draw faint lines from docs to brain
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.lineWidth = 1;
+        docs.forEach(doc => {
+            const from = getCenter(doc);
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(brainPos.x, brainPos.y);
+            ctx.stroke();
+        });
+
+        // Brain to chat
+        ctx.beginPath();
+        ctx.moveTo(brainPos.x, brainPos.y);
+        ctx.lineTo(chatPos.x, chatPos.y);
+        ctx.stroke();
+
+        // Spawn particles
+        if (Math.random() < 0.06) spawnParticle();
+
+        // Update & draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.progress += p.speed;
+
+            if (p.phase === 0) {
+                const t = Math.min(1, p.progress);
+                const e = t * t * (3 - 2 * t);
+                p.x = p.fromX + (p.brainX - p.fromX) * e;
+                p.y = p.fromY + (p.brainY - p.fromY) * e;
+
+                if (t >= 1) { p.phase = 1; p.progress = 0; }
+
+                const alpha = 0.3 + 0.4 * Math.sin(e * Math.PI);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(123, 97, 255, ${alpha})`;
+                ctx.fill();
+            } else {
+                const t = Math.min(1, p.progress);
+                const e = t * t * (3 - 2 * t);
+                p.x = p.brainX + (p.chatX - p.brainX) * e;
+                p.y = p.brainY + (p.chatY - p.brainY) * e;
+
+                if (t >= 1) { particles.splice(i, 1); continue; }
+
+                const alpha = 0.4 + 0.3 * Math.sin(e * Math.PI);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 240, 255, ${alpha})`;
+                ctx.fill();
+            }
+        }
+
+        if (particles.length > 25) particles.splice(0, particles.length - 25);
+        requestAnimationFrame(draw);
+    }
 
     const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            // Show typing for 2s, then reveal answer
-            setTimeout(() => {
-                typing.classList.add('hidden');
-                answer.classList.add('visible');
-            }, 2000);
-            observer.disconnect();
+        if (entries[0].isIntersecting && !running) {
+            running = true; resize(); requestAnimationFrame(draw);
+        } else if (!entries[0].isIntersecting) {
+            running = false;
         }
-    }, { threshold: 0.3 });
+    }, { threshold: 0.2 });
 
-    observer.observe(typing.closest('.kb-demo') || typing);
+    observer.observe(canvas.parentElement);
+    window.addEventListener('resize', resize);
 })();
 
 // ---- Flow Demo (Report Generation Animation) ----
