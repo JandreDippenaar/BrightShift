@@ -372,6 +372,7 @@ function multiLerp(stops, t) {
 
     const slideCount = dots.length;
     let current = 0;
+    let autoTimer = null;
 
     function goTo(idx) {
         current = Math.max(0, Math.min(idx, slideCount - 1));
@@ -382,9 +383,16 @@ function multiLerp(stops, t) {
 
         // Trigger/stop slide-specific animations
         if (window._webappBuild) {
-            if (current === 2) window._webappBuild.start();
+            if (current === 1) window._webappBuild.start();
             else window._webappBuild.stop();
         }
+
+        // Reset auto-advance timer (per-slide durations)
+        const slideDurations = [4000, 7000, 8000]; // report, webapp, KB
+        clearTimeout(autoTimer);
+        autoTimer = setTimeout(() => {
+            goTo((current + 1) % slideCount);
+        }, slideDurations[current] || 6000);
     }
 
     dots.forEach(dot => {
@@ -520,22 +528,22 @@ window._webappBuild = {
             reqs.forEach(r => r.classList.remove('active-build'));
             parts.forEach(p => p.classList.remove('built'));
 
-            await sleep(800);
+            await sleep(400);
 
             for (let i = 0; i < reqs.length; i++) {
                 if (gen !== self.generation) return;
                 reqs[i].classList.add('active-build');
-                await sleep(400);
+                await sleep(250);
                 if (gen !== self.generation) return;
                 parts.forEach(p => {
                     if (parseInt(p.dataset.step) === i) p.classList.add('built');
                 });
-                await sleep(800);
+                await sleep(500);
                 if (gen !== self.generation) return;
                 reqs[i].classList.remove('active-build');
             }
 
-            await sleep(3000);
+            await sleep(2000);
             if (gen !== self.generation) return;
             runBuild();
         }
