@@ -429,11 +429,11 @@ function multiLerp(stops, t) {
     ];
 
     let currentIdx = 0;
-    let running = false;
+    let generation = 0; // prevents stale loops from continuing
 
     function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-    async function showQA(idx) {
+    async function showQA(idx, gen) {
         const pair = qaPairs[idx];
 
         // Clear previous
@@ -446,22 +446,24 @@ function multiLerp(stops, t) {
         chatBody.appendChild(userMsg);
         const userSpan = userMsg.querySelector('span');
         for (let i = 0; i < pair.q.length; i++) {
+            if (gen !== generation) return; // stale loop, bail out
             userSpan.textContent += pair.q[i];
             await sleep(25);
         }
 
+        if (gen !== generation) return;
         await sleep(400);
 
         // Show AI typing
+        if (gen !== generation) return;
         const aiMsg = document.createElement('div');
         aiMsg.className = 'chat-msg ai';
         aiMsg.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div><span class="chat-answer-text"></span>';
         chatBody.appendChild(aiMsg);
-
-        // Scroll chat to bottom
         chatBody.scrollTop = chatBody.scrollHeight;
 
         await sleep(1500);
+        if (gen !== generation) return;
 
         // Replace typing with answer
         const typingEl = aiMsg.querySelector('.chat-typing');
@@ -469,23 +471,23 @@ function multiLerp(stops, t) {
         typingEl.style.display = 'none';
         answerEl.textContent = pair.a;
         answerEl.style.display = 'inline';
-
         chatBody.scrollTop = chatBody.scrollHeight;
 
         await sleep(3500);
+        if (gen !== generation) return;
 
         // Next question
         currentIdx = (currentIdx + 1) % qaPairs.length;
-        if (running) showQA(currentIdx);
+        showQA(currentIdx, gen);
     }
 
-    // Start when visible
+    // Start when visible, kill old loop when hidden
     const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !running) {
-            running = true;
-            showQA(currentIdx);
-        } else if (!entries[0].isIntersecting) {
-            running = false;
+        if (entries[0].isIntersecting) {
+            generation++; // kill any old loop
+            showQA(currentIdx, generation);
+        } else {
+            generation++; // kill current loop
         }
     }, { threshold: 0.2 });
 
