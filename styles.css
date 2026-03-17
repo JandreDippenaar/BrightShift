@@ -608,17 +608,84 @@ body {
 }
 
 /* ============================================
-   EXAMPLE - FLOW DEMO
+   EXAMPLES CAROUSEL
    ============================================ */
-.example-section {
+.examples-wrapper {
     position: relative;
     z-index: 2;
-    padding: 4rem 2rem;
+    padding: 4rem 0;
     max-width: var(--max-width);
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     border-radius: 16px;
+}
+
+.examples-wrapper .section-header {
+    padding: 0 2rem;
+}
+
+.examples-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: transform;
+}
+
+.example-slide {
+    min-width: 100%;
+    flex-shrink: 0;
+    padding: 0 2rem;
+}
+
+.slide-title {
+    text-align: center;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.slide-desc {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Carousel dots */
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 0 0;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0;
+}
+
+.carousel-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+}
+
+.carousel-dot:hover {
+    border-color: var(--accent);
 }
 
 .flow-demo {
@@ -861,20 +928,224 @@ body {
     letter-spacing: 0.03em;
 }
 
-/* Flow demo responsive */
+/* ---- Knowledge Base Demo ---- */
+.kb-demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    min-height: 280px;
+    padding: 2rem 0;
+}
+
+.kb-docs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.kb-doc {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.8rem;
+    background: rgba(10, 10, 20, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateX(-15px);
+    animation: source-appear 0.4s ease forwards;
+}
+
+.kb-doc span {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.kb-doc[data-delay="0"] { animation-delay: 0.1s; }
+.kb-doc[data-delay="1"] { animation-delay: 0.25s; }
+.kb-doc[data-delay="2"] { animation-delay: 0.4s; }
+.kb-doc[data-delay="3"] { animation-delay: 0.55s; }
+.kb-doc[data-delay="4"] { animation-delay: 0.7s; }
+
+/* Brain hub */
+.kb-brain {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 2.5rem;
+    flex-shrink: 0;
+}
+
+.brain-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+}
+
+.brain-ring-outer {
+    width: 90px;
+    height: 90px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - 12px));
+    opacity: 0.12;
+    animation: hub-pulse-outer 3s ease-in-out infinite;
+}
+
+.brain-ring-inner {
+    width: 65px;
+    height: 65px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - 12px));
+    opacity: 0.2;
+    animation: hub-pulse-inner 3s ease-in-out infinite 0.5s;
+}
+
+.brain-core {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.8);
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+}
+
+.brain-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+    white-space: nowrap;
+}
+
+/* Chat output */
+.kb-chat {
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.chat-window {
+    width: 260px;
+    background: rgba(10, 10, 20, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.5rem 0.7rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-title {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-left: 0.4rem;
+}
+
+.chat-body {
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 120px;
+}
+
+.chat-msg {
+    max-width: 90%;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.chat-msg.user {
+    align-self: flex-end;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    border-bottom-right-radius: 2px;
+}
+
+.chat-msg.ai {
+    align-self: flex-start;
+    background: rgba(var(--accent), 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border-bottom-left-radius: 2px;
+}
+
+.chat-answer {
+    display: none;
+}
+
+.chat-answer.visible {
+    display: inline;
+}
+
+.chat-typing {
+    display: flex;
+    gap: 3px;
+    padding: 2px 0;
+}
+
+.chat-typing.hidden {
+    display: none;
+}
+
+.chat-typing span {
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: typing-dot 1.2s ease-in-out infinite;
+}
+
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-dot {
+    0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
+    30% { opacity: 0.8; transform: translateY(-3px); }
+}
+
+/* Flow & KB demo responsive */
 @media (max-width: 750px) {
-    .flow-demo {
+    .flow-demo, .kb-demo {
         flex-direction: column;
         gap: 2rem;
         min-height: auto;
     }
-    .flow-sources {
+    .flow-sources, .kb-docs {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
     }
-    .flow-hub { margin: 0; }
+    .flow-hub, .kb-brain { margin: 0; }
     #flow-canvas { display: none; }
+    .chat-window { width: 100%; max-width: 280px; }
 }
 
 /* Services */

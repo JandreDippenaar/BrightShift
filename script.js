@@ -362,6 +362,69 @@ function multiLerp(stops, t) {
     requestAnimationFrame(update);
 })();
 
+// ---- Examples Carousel ----
+(function initCarousel() {
+    const track = document.querySelector('.carousel-track');
+    const dots = document.querySelectorAll('.carousel-dot');
+    if (!track || !dots.length) return;
+
+    let current = 0;
+
+    function goTo(idx) {
+        current = idx;
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => goTo(parseInt(dot.dataset.slide)));
+    });
+
+    // Swipe support
+    let startX = 0, diff = 0;
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchmove', e => { diff = e.touches[0].clientX - startX; }, { passive: true });
+    track.addEventListener('touchend', () => {
+        if (Math.abs(diff) > 50) {
+            if (diff < 0 && current < dots.length - 1) goTo(current + 1);
+            else if (diff > 0 && current > 0) goTo(current - 1);
+        }
+        diff = 0;
+    });
+
+    // Mouse drag support
+    let mouseDown = false, mouseStartX = 0, mouseDiff = 0;
+    track.addEventListener('mousedown', e => { mouseDown = true; mouseStartX = e.clientX; track.style.cursor = 'grabbing'; });
+    window.addEventListener('mousemove', e => { if (mouseDown) mouseDiff = e.clientX - mouseStartX; });
+    window.addEventListener('mouseup', () => {
+        if (mouseDown && Math.abs(mouseDiff) > 50) {
+            if (mouseDiff < 0 && current < dots.length - 1) goTo(current + 1);
+            else if (mouseDiff > 0 && current > 0) goTo(current - 1);
+        }
+        mouseDown = false; mouseDiff = 0; track.style.cursor = '';
+    });
+})();
+
+// ---- Knowledge Base Chat Animation ----
+(function initKBChat() {
+    const typing = document.getElementById('kb-typing');
+    const answer = document.getElementById('kb-answer');
+    if (!typing || !answer) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            // Show typing for 2s, then reveal answer
+            setTimeout(() => {
+                typing.classList.add('hidden');
+                answer.classList.add('visible');
+            }, 2000);
+            observer.disconnect();
+        }
+    }, { threshold: 0.3 });
+
+    observer.observe(typing.closest('.kb-demo') || typing);
+})();
+
 // ---- Flow Demo (Report Generation Animation) ----
 (function initFlowDemo() {
     const canvas = document.getElementById('flow-canvas');
