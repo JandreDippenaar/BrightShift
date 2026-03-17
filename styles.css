@@ -205,16 +205,27 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.bird svg {
-    animation: flap 0.4s ease-in-out infinite alternate;
+.bird .wing-l {
+    transform-origin: 12px 10px;
+    animation: flap-left 0.8s ease-in-out infinite;
 }
 
-.bird-2 svg { animation-duration: 0.35s; }
-.bird-3 svg { animation-duration: 0.45s; }
+.bird .wing-r {
+    transform-origin: 12px 10px;
+    animation: flap-right 0.8s ease-in-out infinite;
+}
 
-@keyframes flap {
-    0% { transform: scaleY(1); }
-    100% { transform: scaleY(-0.6); }
+.bird-2 .wing-l, .bird-2 .wing-r { animation-duration: 0.7s; }
+.bird-3 .wing-l, .bird-3 .wing-r { animation-duration: 0.9s; }
+
+@keyframes flap-left {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(18deg); }
+}
+
+@keyframes flap-right {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-18deg); }
 }
 
 /* Grid canvas */
