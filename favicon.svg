@@ -3,9 +3,10 @@
   <path d="M16 9L23 13V19L16 23L9 19V13L16 9Z" stroke="url(#g)" stroke-width="1.5" opacity="0.6"/>
   <circle cx="16" cy="16" r="3" fill="url(#g)"/>
   <defs>
-    <linearGradient id="g" x1="3" y1="2" x2="29" y2="30">
-      <stop stop-color="#00f0ff"/>
-      <stop offset="1" stop-color="#7b61ff"/>
+    <linearGradient id="g" x1="3" y1="30" x2="29" y2="2">
+      <stop stop-color="#ff6f00"/>
+      <stop offset="0.5" stop-color="#ffb300"/>
+      <stop offset="1" stop-color="#ffe082"/>
     </linearGradient>
   </defs>
 </svg>
