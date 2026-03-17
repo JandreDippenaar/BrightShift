@@ -1371,6 +1371,81 @@ body {
     height: 5px;
 }
 
+/* Build animation parts */
+.build-part {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.build-part.built {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Notification element */
+.mockup-notification {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    position: relative;
+}
+
+.notif-icon {
+    font-size: 0.7rem;
+    color: var(--accent);
+    opacity: 0.6;
+}
+
+.notif-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.notif-line {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+}
+
+.notif-line.short { width: 60%; }
+
+.notif-badge {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: #fff;
+    background: #ff6b6b;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Req card glow when its part builds */
+.req-card.active-build {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.1);
+}
+
+.req-card.active-build .req-check {
+    text-shadow: 0 0 8px var(--accent);
+}
+
 .mockup-label {
     font-family: var(--mono);
     font-size: 0.75rem;

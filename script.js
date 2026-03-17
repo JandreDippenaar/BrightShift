@@ -495,6 +495,67 @@ function multiLerp(stops, t) {
     if (kbDemo) observer.observe(kbDemo);
 })();
 
+// ---- Webapp Build Animation ----
+(function initWebappBuild() {
+    const demo = document.querySelector('.webapp-demo');
+    if (!demo) return;
+
+    const reqs = demo.querySelectorAll('.req-card');
+    const parts = demo.querySelectorAll('.build-part');
+    let generation = 0;
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function runBuild(gen) {
+        // Reset everything
+        reqs.forEach(r => r.classList.remove('active-build'));
+        parts.forEach(p => p.classList.remove('built'));
+
+        await sleep(800);
+
+        // Build each step
+        for (let i = 0; i < reqs.length; i++) {
+            if (gen !== generation) return;
+
+            // Highlight requirement
+            reqs[i].classList.add('active-build');
+            await sleep(400);
+            if (gen !== generation) return;
+
+            // Build corresponding mockup part
+            parts.forEach(p => {
+                if (parseInt(p.dataset.step) === i) {
+                    p.classList.add('built');
+                }
+            });
+
+            await sleep(800);
+            if (gen !== generation) return;
+
+            // Un-highlight requirement (keep check visible)
+            reqs[i].classList.remove('active-build');
+        }
+
+        // Hold the completed state
+        await sleep(3000);
+        if (gen !== generation) return;
+
+        // Loop
+        runBuild(gen);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            generation++;
+            runBuild(generation);
+        } else {
+            generation++;
+        }
+    }, { threshold: 0.2 });
+
+    observer.observe(demo);
+})();
+
 // ---- Knowledge Base Connecting Lines ----
 (function initKBLines() {
     const canvas = document.getElementById('kb-canvas');
