@@ -1177,21 +1177,222 @@ body {
     30% { opacity: 0.8; transform: translateY(-3px); }
 }
 
-/* Flow & KB demo responsive */
+/* ---- Bespoke Web App Demo ---- */
+.webapp-demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    min-height: 260px;
+    padding: 1.5rem 0;
+}
+
+.webapp-reqs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.req-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.8rem;
+    background: rgba(10, 10, 20, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateX(-15px);
+    animation: source-appear 0.4s ease forwards;
+}
+
+.req-card[data-delay="0"] { animation-delay: 0.1s; }
+.req-card[data-delay="1"] { animation-delay: 0.25s; }
+.req-card[data-delay="2"] { animation-delay: 0.4s; }
+.req-card[data-delay="3"] { animation-delay: 0.55s; }
+
+.req-check {
+    color: var(--accent);
+    font-size: 0.8rem;
+}
+
+.webapp-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0 2rem;
+    color: var(--accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.webapp-arrow-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+/* App mockup */
+.webapp-mockup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.mockup-window {
+    width: 300px;
+    background: rgba(10, 10, 20, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.mockup-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.4rem 0.6rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mockup-url {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    margin-left: 0.4rem;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+}
+
+.mockup-body {
+    display: flex;
+    min-height: 160px;
+}
+
+.mockup-sidebar {
+    width: 36px;
+    background: rgba(255, 255, 255, 0.02);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 0.5rem 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.sidebar-item {
+    width: 20px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+}
+
+.sidebar-item.active {
+    background: var(--accent);
+    opacity: 0.5;
+    box-shadow: 0 0 6px var(--accent);
+}
+
+.mockup-content {
+    flex: 1;
+    padding: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mockup-title-bar {
+    height: 6px;
+    width: 45%;
+    background: var(--accent);
+    opacity: 0.35;
+    border-radius: 3px;
+}
+
+.mockup-cards-row {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.mockup-mini-card {
+    flex: 1;
+    padding: 0.4rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.mini-card-num {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.7;
+}
+
+.mini-card-label {
+    height: 3px;
+    width: 70%;
+    margin: 0.2rem auto 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+}
+
+.mockup-table {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.table-row {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+}
+
+.table-row.header {
+    background: rgba(255, 255, 255, 0.1);
+    height: 5px;
+}
+
+.mockup-label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Flow, KB & Webapp demo responsive */
 @media (max-width: 750px) {
-    .flow-demo, .kb-demo {
+    .flow-demo, .kb-demo, .webapp-demo {
         flex-direction: column;
         gap: 2rem;
         min-height: auto;
     }
-    .flow-sources, .kb-docs {
+    .flow-sources, .kb-docs, .webapp-reqs {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
     }
-    .flow-hub, .kb-brain { margin: 0; }
+    .flow-hub, .kb-brain, .webapp-arrow { margin: 0; }
     #flow-canvas, #kb-canvas { display: none; }
     .chat-window { width: 100%; max-width: 280px; }
+    .mockup-window { width: 100%; max-width: 280px; }
 }
 
 /* Services */
