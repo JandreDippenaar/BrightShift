@@ -565,7 +565,7 @@ body {
     gap: 3rem;
     padding: 3rem 2rem;
     max-width: var(--max-width);
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     background: rgba(0, 0, 0, 0.4);
@@ -615,7 +615,7 @@ body {
     z-index: 2;
     padding: 4rem 0;
     max-width: var(--max-width);
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     border-radius: 16px;
@@ -1160,7 +1160,7 @@ body {
     z-index: 2;
     padding: 4rem 2rem;
     max-width: var(--max-width);
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     border-radius: 16px;
@@ -1240,7 +1240,7 @@ body {
     z-index: 2;
     padding: 4rem 2rem;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     border-radius: 16px;
@@ -1293,7 +1293,7 @@ body {
     z-index: 2;
     padding: 4rem 2rem;
     max-width: var(--max-width);
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(8px);
     border-radius: 16px;
